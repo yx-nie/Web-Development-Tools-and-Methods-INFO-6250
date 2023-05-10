@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+    <style>
+        #mytable {
+           margin: 0 auto;
+        }
+        
+        .container {
+           text-align:center;
+        }
+        
+        
+    </style>
+
+<div class="row g-0 text-center">
+    <div class="col-sm-6 col-md-8">
+        <h1 id="title">Tic-Tac-Toe Game</h1>
+        <p id="hints"></p>
+        <table id="mytable" class="center">
+            <tr>
+                <td><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+                <td><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+                <td><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+            </tr>
+            <tr>
+                <td ><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+                <td ><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+                <td ><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+            </tr>
+            <tr> 
+                <td ><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+                <td ><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+                <td ><input type="" placeholder="empty" pattern="[X,O]{1}" /></td>
+            </tr>
+        </table>
+        
+        
+        <div id="controll">
+            <button id="start" onclick="startGame()" class="btn btn-primary">Start</button>
+            <input type="button" onclick="resetFunction()" id="reset" value="Reset" class="btn btn-warning" >
+        </div>
+
+
+        <div id="display">
+            <p id="demo"></p>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-4">
+        <h2 id="records">Recording Displaying</h2>
+        <ul id="winnerrecording"></ul>
+    </div>
+</div>
+    
+
+
+    <script>
+        document.getElementById("reset").disabled=true;
+
+        var toggleValue=true;
+        var gamestart=true;
+        var spacefull=false;
+        var table=document.querySelector("#mytable");
+        var rows=table.getElementsByTagName("tr");
+        var result="";
+        
+        
+
+        function startGame(){
+
+            gamestart=true;
+            spacefull=false;
+            result="";
+
+
+            document.getElementById("hints").innerHTML="Please input X or O into the empty space!"
+            document.getElementById("reset").disabled=false;
+
+            var inputs = document.getElementById("mytable").getElementsByTagName("input");
+            for(var i=0; i<inputs.length; i++){
+                inputs[i].onclick=function(){
+                    if(this.value===""){
+                        if(gamestart){
+                           this.value=toggleValue?"X":"O";
+                           toggleValue=!toggleValue;
+                           document.getElementById("start").innerHTML=toggleValue?"X":"O";
+                           checkWinner();
+                           checkFilledSpace();
+                        }
+                    }else{
+                        this.readOnly=true;
+                    }
+                }
+            }
+        }
+
+        function checkFilledSpace(){
+            var inputs = document.getElementById("mytable").getElementsByTagName("input");
+            var count=0;
+            for(var i=0; i<inputs.length; i++){
+                if(inputs[i].value!=""){
+                    count++;
+                }
+            }
+
+            if(count===9){
+                spacefull=!spacefull;
+            }
+        }
+
+        
+
+        
+
+        function checkRows(){
+            result="";
+   
+            //check rows
+            for(var i=0; i<3; i++){
+                var x = rows[i].getElementsByTagName("td")[0].getElementsByTagName("input")[0].value;
+                var y = rows[i].getElementsByTagName("td")[1].getElementsByTagName("input")[0].value;
+                var z = rows[i].getElementsByTagName("td")[2].getElementsByTagName("input")[0].value;
+                if((x===y&&y===z)&&(x!="")){
+                    result=x;
+                    document.getElementById("demo").innerHTML=result+" Wins! Game Over!";
+                    disabledFurtherInput();
+                    
+
+                    //displaying winner records
+                    let history=result+ " Wins";
+                    let winnerrecording=document.getElementById("winnerrecording");
+                    let newli = document.createElement("li");
+                    newli.innerHTML=history;
+                    winnerrecording.appendChild(newli);
+                    
+                }
+            }
+
+        }
+
+        function checkColumns(){
+            result="";
+            //check columns
+            for(var i=0; i<3; i++){
+                var x = rows[0].getElementsByTagName("td")[i].getElementsByTagName("input")[0].value;
+                var y = rows[1].getElementsByTagName("td")[i].getElementsByTagName("input")[0].value;
+                var z = rows[2].getElementsByTagName("td")[i].getElementsByTagName("input")[0].value;
+                if((x===y&&y===z)&&(x!="")){
+                    result=x;
+                    document.getElementById("demo").innerHTML=result+" Wins! Game Over!";
+                    disabledFurtherInput();
+
+                    //displaying winner records
+                    let history=result+ " Wins";
+                    let winnerrecording=document.getElementById("winnerrecording");
+                    let newli = document.createElement("li");
+                    newli.innerHTML=history;
+                    winnerrecording.appendChild(newli);
+                }
+            }
+        }
+
+        function checkleftDiagonal(){
+            result="";
+            
+
+            var x=rows[0].getElementsByTagName("td")[0].getElementsByTagName("input")[0].value;
+            var y=rows[1].getElementsByTagName("td")[1].getElementsByTagName("input")[0].value;
+            var z=rows[2].getElementsByTagName("td")[2].getElementsByTagName("input")[0].value;
+
+            if(x===y&&x===z&&x!==""){
+                result=x;
+                document.getElementById("demo").innerHTML=result+" Wins! Game Over!";
+                disabledFurtherInput();
+
+                //displaying winner records
+                let history=result+ " Wins";
+                let winnerrecording=document.getElementById("winnerrecording");
+                let newli = document.createElement("li");
+                    newli.innerHTML=history;
+                    winnerrecording.appendChild(newli);
+            }
+        }
+
+        function checkrightDiagonal(){
+            result="";
+
+            var x=rows[0].getElementsByTagName("td")[2].getElementsByTagName("input")[0].value;
+            var y=rows[1].getElementsByTagName("td")[1].getElementsByTagName("input")[0].value;
+            var z=rows[2].getElementsByTagName("td")[0].getElementsByTagName("input")[0].value;
+
+            if(x===y&&x===z&&x!==""){
+                result=x;
+                document.getElementById("demo").innerHTML=result+" Wins! Game Over!";
+                disabledFurtherInput();
+
+                //displaying winner records
+                let history=result+ " Wins";
+                let winnerrecording=document.getElementById("winnerrecording");
+                let newli = document.createElement("li");
+                    newli.innerHTML=history;
+                    winnerrecording.appendChild(newli);
+            }
+
+        }
+            
+
+        function checkWinner(){
+            
+
+            checkRows();
+
+            checkColumns();
+
+            checkleftDiagonal();
+            checkrightDiagonal();
+
+            checkFilledSpace();
+
+            
+            // var inputs = document.getElementById("mytable").getElementsByTagName("input");
+            // for(var i=0; i<inputs.length; i++){
+            //     inputs[i].onclick=function(){
+            //         if(result!==""){
+            //             this.readOnly=true;
+            //         }
+            //     }
+            // }
+            
+
+            if((spacefull)&&(result==="")){
+                document.getElementById("demo").innerHTML="Draw";
+                //displaying winner records
+                let history="Draw";
+                    let winnerrecording=document.getElementById("winnerrecording");
+                    let newli = document.createElement("li");
+                    newli.innerHTML=history;
+                    winnerrecording.appendChild(newli);
+            }
+        }    
+
+        function disabledFurtherInput(){
+
+            var inputs = document.getElementById("mytable").getElementsByTagName("input");
+            for(var i=0; i<inputs.length; i++){
+                inputs[i].onclick=function(){
+                    if(result!==""){
+                        this.readOnly=true;
+                    }
+                }
+            }
+        }    
+
+        function resetFunction(){
+            var table=document.querySelector("#mytable");
+            var rows=table.getElementsByTagName("tr");
+            for(var i=0; i<3; i++){
+                var cols=rows[i].getElementsByTagName("td");
+                for(var j=0; j<3; j++){
+                    var input=cols[j].getElementsByTagName("input");
+                    for(var k=0; k<input.length; k++){
+                        input[k].value="";
+                    }
+                }
+            }
+            document.getElementById("demo").innerHTML="";
+            document.getElementById("start").innerHTML="Start";
+            toggleValue=true;
+            gamestart=false;
+            spacefull=false;
+            result="";
+            history=[];
+            
+        }
+
+
+    </script>
+
+
+
+
+
+
+
+
+    
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+</body>
+</html>

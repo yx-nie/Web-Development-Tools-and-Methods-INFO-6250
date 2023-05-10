@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+    <style>
+        form {
+            width: 50%;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: left;
+        }
+    </style>
+    <div>
+        <form class="row g-3" method="POST" action="FormDemo">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="firstname" class="form-label">First Name</label><span style="color: red;">*</span>
+                    <input type="text" required class="form-control" name="firstname" id="firstname" pattern="^[a-zA-Z]+$"> 
+                </div>
+                <div class="col-md-4">
+                    <label for="lastname" class="form-label">Last Name</label><span style="color: red;">*</span>
+                    <input type="text" required class="form-control" name="lastname" id="lastname" pattern="^[a-zA-Z]+$"> 
+                </div>
+                <div class="col-md-4">
+                    <label for="middlename" class="form-label">Middle Name</label>
+                    <input type="text" class="form-control" name="middlename" id="middlename" pattern="^[a-zA-Z]+$"> 
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label for="address1" class="form-label">Address 1</label><span style="color: red;">*</span>
+                    <input type="text" required class="form-control" name="address1" id="address1" placeholder="1234 Main St">
+                </div>
+                <div class="col-12">
+                    <label for="address2" class="form-label">Address 2</label>
+                    <input type="text" class="form-control" name="address2" id="address2" placeholder="Apartment, studio, or floor">
+                </div>
+                <div class="col-md-6">
+                    <label for="city" class="form-label">City</label><span style="color: red;">*</span>
+                    <input type="text" required class="form-control" name="city" id="city" pattern="^[a-zA-Z]+$">
+                </div>
+                <div class="col-md-6">
+                    <label for="state" class="form-label">State</label><span style="color: red;">*</span>
+                    <input type="text" required class="form-control" name="state" id="state" pattern="^[a-zA-Z]+$">
+                </div>
+                <div class="col-md-6">
+                    <label for="postcode" class="form-label">Post Code</label><span style="color: red;">*</span>
+                    <input type="text" required class="form-control" name="postcode" id="postcode" pattern="[A-Z][0-9][A-Z] [0-9][A-Z][0-9]">
+                </div>
+                <div class="col-md-6">
+                    <label for="country" class="form-label">Country</label><span style="color: red;">*</span>
+                    <input type="text" required class="form-control" name="country" id="country" pattern="^[a-zA-Z]+$">
+                </div>
+            </div>
+            <!-- either one is required -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="mobile" class="form-label">Mobile</label>
+                    <input type="text" class="form-control" name="mobile" id="mobile" pattern="(?=.*\d).{10,}">
+                </div>
+                <div class="col-md-6">
+                    <label for="work" class="form-label">Work</label>
+                    <input type="text" class="form-control" name="work" id="work" pattern="(?=.*\d).{10,}">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label><span style="color: red;">*</span>
+                    <input type="email" required class="form-control" name="email" id="email" pattern="(?=.*[.@]">
+                </div>
+                
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="contact" class="form-label">Contact Preference</label><span style="color: red;">*</span><br>
+                    <input type="radio" required id="contact" name="choice"> SMS
+                    <input type="radio" id="contact" name="choice"> Email
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label" >Gender</label><span style="color: red;">*</span><br>
+                    <select name="gender">
+                        <option id="Female" > Female</option>
+                        <option id="Male"> Male</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="username" class="form-label">Username</label><span style="color: red;">*</span>
+                    <input type="text" required class="form-control" name="username" id="username" pattern="{5,}">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label><span style="color: red;">*</span>
+                    <input type="password" required class="form-control" name="password" id="password" pattern="(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{6,}">
+                    
+                </div>
+                <div class="col-md-6">
+                    <label for="repassword" class="form-label">Retype Password</label><span style="color: red;">*</span>
+                    <input type="password" required class="form-control" id="repassword">
+                </div>
+                <div>
+                    <label>password should contains at least 1 alphabet, 1 number, 1 special character [!@#$%^&*] with munimum 6 characters</label>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary" onclick="submitform()">Submit</button>
+            </div>
+            
+          </form>
+    </div>
+    
+    <script>
+        function submitform(){
+
+            //check password
+            const password=document.getElementById("password").value;
+            const repassword=document.getElementById("repassword").value;
+            if(password!==repassword){
+                alert("Passwords are not matched")
+                return false
+            }
+            
+            //check phone nubmer filling
+            const mobile=document.getElementById("mobile").value;
+            const work=document.getElementById("work").value;
+            if(!mobile && !work){
+                alert("Please fill either mobile or work")
+                return false
+            }
+
+            return true
+
+        }
+
+
+    </script>
+
+    
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+</body>
+</html>

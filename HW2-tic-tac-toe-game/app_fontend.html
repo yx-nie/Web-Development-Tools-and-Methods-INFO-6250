@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+    <style>
+        #mytable {
+           margin: 0 auto;
+           width: 30%;
+           text-align:center;
+        }
+        
+        /* .container {
+           text-align:center;
+        } */
+        
+        td{
+           width: 10%;
+           height: 0;
+           padding-bottom: 30%;
+           position: relative;
+        }
+
+        td input{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+        
+        
+    </style>
+    <div class="row g-0 text-center">
+        <div class="col-sm-6 col-md-8">
+            <h1 id="title">Tic-Tac-Toe Game</h1>
+            <p id="hints"></p>
+            <table id="mytable" class="center" >
+                <tr>
+                    <td><input type="" pattern="[X,O]{1}"/></td>
+                    <td><input type="" pattern="[X,O]{1}"/></td>
+                    <td><input type="" pattern="[X,O]{1}"/></td>
+                </tr>
+                <tr>
+                    <td ><input type="" pattern="[X,O]{1}" /></td>
+                    <td ><input type="" pattern="[X,O]{1}" /></td>
+                    <td ><input type="" pattern="[X,O]{1}" /></td>
+                </tr>
+                <tr> 
+                    <td ><input type="" pattern="[X,O]{1}"/></td>
+                    <td ><input type="" pattern="[X,O]{1}"/></td>
+                    <td ><input type="" pattern="[X,O]{1}"/></td>
+                </tr>
+            </table>
+            
+            
+            <div id="controll" class="center" >
+                <button id="start" onclick="startGame()" class="btn btn-primary">Start</button>
+                <input type="button" onclick="resetFunction()" id="reset" value="Reset" class="btn btn-warning" >
+                
+            </div>
+    
+    
+            <div id="display">
+                <p id="demo"></p>
+            </div>
+        </div>
+    
+        <div class="col-6 col-md-4">
+            <h2 id="records">Who Wins:</h2>
+            <h3 id="winner"></h3>
+            <input type="button" id="get" value="Check the Winner" class="btn btn-primary">
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById("reset").disabled=true;
+
+        var toggleValue=true;
+        var gamestart=true;
+        var spacefull=false;
+        var table=document.querySelector("#mytable");
+        var rows=table.getElementsByTagName("tr");
+        
+        var databack="";
+        var result="";
+
+        const getBtn = document.getElementById("get")
+        getBtn.addEventListener('click',getInfo)
+
+        posturl="http://localhost:5000/post"
+
+        
+        async function postInfo(){
+            result="";
+
+            var inputs = document.getElementById("mytable").getElementsByTagName("input");
+            var data=[]
+
+            for(var i=0; i<inputs.length; i++){
+                data.push(inputs[i].value);
+            }
+
+            const res =await fetch(posturl, 
+            {
+                method:'POST',
+                headers:{
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    data
+                })
+            } )
+
+            
+
+            res.json().then(data=>{
+                disabledFurtherInput();
+                document.getElementById("demo").innerHTML="Game Over! Check the Winner!";
+
+                console.log(result);
+            })
+
+            // return result;
+
+//             console.log(res.json().then(data => {
+//     console.log(data)
+// }));
+
+//             result=res.data;
+//             console.log(result+"post");
+            
+        }
+
+        geturl="http://localhost:5000/get"
+
+        async function getInfo(){
+
+            const res = await fetch(geturl, 
+            {
+                method:'GET',
+                header:{
+                    "Content-Type": "application/json"
+                }
+            })
+            
+            console.log(res);
+            const data = await res.json();
+            var l=data.length;
+            document.getElementById("winner").innerHTML=data[l-1];
+       }      
+
+        function startGame(){
+
+            gamestart=true;
+            spacefull=false;
+            result="";
+
+            document.getElementById("reset").disabled=false;
+
+            var inputs = document.getElementById("mytable").getElementsByTagName("input");
+            console.log(inputs);
+            for(var i=0; i<inputs.length; i++){
+                inputs[i].onclick=function(){
+                    if(this.value===""){
+                        if(gamestart){
+                           this.value=toggleValue?"X":"O";
+                           toggleValue=!toggleValue;
+                           document.getElementById("start").innerHTML=toggleValue?"X":"O";
+                           postInfo();
+                           
+                        
+                        //    })
+                     
+
+                        //    if(result!==""){
+                        //     document.getElementById("demo").innerHTML=result+ "Wins!";
+                        //     // disabledFurtherInput();
+                        //    }
+                        //    
+                           
+                        //    checkFilledSpace();
+                        }
+                    }else{
+                        this.readOnly=true;
+                    }
+                }
+            }
+        }
+
+        function checkFilledSpace(){
+            var inputs = document.getElementById("mytable").getElementsByTagName("input");
+            var count=0;
+            for(var i=0; i<inputs.length; i++){
+                if(inputs[i].value!=""){
+                    count++;
+                }
+            }
+
+            if(count===9){
+                spacefull=!spacefull;
+            }
+        }
+        
+        function disabledFurtherInput(){
+
+            var inputs = document.getElementById("mytable").getElementsByTagName("input");
+            for(var i=0; i<inputs.length; i++){
+                inputs[i].onclick=function(){
+                    if(result!==""){
+                        this.readOnly=true;
+                    }
+                }
+            }
+        }    
+
+        function resetFunction(){
+            var table=document.querySelector("#mytable");
+            var rows=table.getElementsByTagName("tr");
+            for(var i=0; i<3; i++){
+                var cols=rows[i].getElementsByTagName("td");
+                for(var j=0; j<3; j++){
+                    var input=cols[j].getElementsByTagName("input");
+                    for(var k=0; k<input.length; k++){
+                        input[k].value="";
+                    }
+                }
+            }
+            document.getElementById("demo").innerHTML="";
+            document.getElementById("start").innerHTML="Start";
+            toggleValue=true;
+            gamestart=false;
+            spacefull=false;
+            result="";
+            history=[];
+            
+        }
+
+
+    </script>
+
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+    
+</body>
+</html>
